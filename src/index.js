@@ -2,6 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+
+function ResetButton(props) {
+	return (
+		<button onClick={props.onReset}>
+			{'Restart Game'}
+		</button>
+	);
+}
+
 function Square(props) {
   return (
     <button 
@@ -34,6 +43,13 @@ class Board extends React.Component {
 		});
 	}
 
+	handleReset() {
+		this.setState({
+			squares: Array(9).fill(null),
+			xIsNext: true,
+		})
+	}
+
   renderSquare(i) {
     return (
     	<Square 
@@ -43,11 +59,19 @@ class Board extends React.Component {
     );
   }
 
+  renderResetButton() {
+  	return (
+  		<ResetButton onReset={() => this.handleReset()}/>
+  	);
+  }
+
   render() {
   	const winner = calculateWinner(this.state.squares);
   	let status;
-  	if (winner) {
+  	if (winner === 'X' || winner === 'O') {
   		status = 'Winner: ' + winner;
+  	} else if (winner === 'tie') {
+  		status = 'Tied game!'
   	} else {
   		status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
   	} 
@@ -69,6 +93,9 @@ class Board extends React.Component {
           {this.renderSquare(6)}
           {this.renderSquare(7)}
           {this.renderSquare(8)}
+        </div>
+        <div>
+        	{this.renderResetButton()}
         </div>
       </div>
     );
@@ -106,6 +133,8 @@ function calculateWinner(squares) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
+    } else if (squares.filter(elem => elem === null).length === 0) {
+    	return 'tie';
     }
   }
   return null;
