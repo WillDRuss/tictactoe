@@ -32,19 +32,47 @@ ol, ul {
   width: 34px;
 }
 
+.square:hover {
+  cursor: pointer;
+  background-color: lightgreen;
+}
+
 .square:focus {
   outline: none;
 }
+
 
 .kbd-navigation .square:focus {
   background: #ddd;
 }
 
+.game-board {
+  display: flex;
+  justify-content: center;
+  width: 50%;
+}
+
 .game {
   display: flex;
+  justify-content: center;
   flex-direction: row;
+  width: 100%;
 }
 
 .game-info {
   margin-left: 20px;
+  width: 50%;
+}
+
+#reset {
+  margin-top: 1rem;
+  border-radius: 5px;
+}
+
+#reset:hover {
+  cursor: pointer;
+}
+
+#root {
+  width: 100%;
 }
