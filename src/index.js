@@ -40,32 +40,28 @@ class Board extends React.Component {
   }
 
   render() {
-  	let arr = [0,1,2]
   	let gridSize = 3;
   	let gridArr = []
-  	for (let j = 0; j < gridSize**2; j++) {
-  		gridArr.push(this.renderSquare(j))
-  		}		
 
-  	let filterRow = (i) => {
-    		return gridArr.filter((elem, ind) => {
-    			if (ind >= 3*i && ind < 3*(i+1)) {
-    				return (
-    						elem
-    				);
-    			} else {
-    				return null;
-    			}
-    		});	
+  	for(let i=0; i<gridSize; i++) {
+  		gridArr.push(i);
+  	}  	
+
+  	const createRow = (i) => {
+  		let row = []
+  		for (let j = 0; j < gridSize; j++) {
+  		 row.push(this.renderSquare(i*gridSize + j));
+  		}		
+  		return row;
   	}
 
     return (
     	<div>
     			{
-    				arr.map((elem, id) => {
+    				gridArr.map((elem, id) => {
 	    				return (
 	    					<div key = {id} className="board-row">
-	    						{filterRow(id)}
+	    						{createRow(id)}
 	    					</div>
 	    				);
 	    			})
@@ -75,8 +71,6 @@ class Board extends React.Component {
 	  );
 	}
 }
-
-
 
 
 class Game extends React.Component {
