@@ -26,6 +26,7 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
     	<Square 
+    		key ={i}
     		value={this.props.squares[i]}
     		onClick={() => this.props.onClick(i)} 
     	/>
@@ -39,30 +40,44 @@ class Board extends React.Component {
   }
 
   render() {
+  	let arr = [0,1,2]
+  	let gridSize = 3;
+  	let gridArr = []
+  	for (let j = 0; j < gridSize**2; j++) {
+  		gridArr.push(this.renderSquare(j))
+  		}		
+
+  	let filterRow = (i) => {
+    		return gridArr.filter((elem, ind) => {
+    			if (ind >= 3*i && ind < 3*(i+1)) {
+    				return (
+    						elem
+    				);
+    			} else {
+    				return null;
+    			}
+    		});	
+  	}
+
     return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-        <div>
-        	{this.renderResetButton()}
-        </div>
-      </div>
-    );
-  }
+    	<div>
+    			{
+    				arr.map((elem, id) => {
+	    				return (
+	    					<div key = {id} className="board-row">
+	    						{filterRow(id)}
+	    					</div>
+	    				);
+	    			})
+	    		}
+    		{this.renderResetButton()}
+	    </div>
+	  );
+	}
 }
+
+
+
 
 class Game extends React.Component {
 	constructor(props) {
@@ -129,6 +144,8 @@ class Game extends React.Component {
 	  				</button>
 	  			</li>
 	  		);
+  		} else {
+  			return null;
   		}
   	});
 
