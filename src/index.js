@@ -26,6 +26,7 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
     	<Square 
+    		key ={i}
     		value={this.props.squares[i]}
     		onClick={() => this.props.onClick(i)} 
     	/>
@@ -39,30 +40,38 @@ class Board extends React.Component {
   }
 
   render() {
+  	let gridSize = 3;
+  	let gridArr = []
+
+  	for(let i=0; i<gridSize; i++) {
+  		gridArr.push(i);
+  	}  	
+
+  	const createRow = (i) => {
+  		let row = []
+  		for (let j = 0; j < gridSize; j++) {
+  		 row.push(this.renderSquare(i*gridSize + j));
+  		}		
+  		return row;
+  	}
+
     return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-        <div>
-        	{this.renderResetButton()}
-        </div>
-      </div>
-    );
-  }
+    	<div>
+    			{
+    				gridArr.map((elem, id) => {
+	    				return (
+	    					<div key = {id} className="board-row">
+	    						{createRow(id)}
+	    					</div>
+	    				);
+	    			})
+	    		}
+    		{this.renderResetButton()}
+	    </div>
+	  );
+	}
 }
+
 
 class Game extends React.Component {
 	constructor(props) {
@@ -70,6 +79,7 @@ class Game extends React.Component {
 		this.state =  {
 			history: [{
 				squares: Array(9).fill(null),
+				lastMove: ''
 			}],
 			stepNumber: 0,
 			xIsNext: true,
@@ -84,9 +94,11 @@ class Game extends React.Component {
 			return;
 		}
 		squares[i] = this.state.xIsNext ? 'X' : 'O';
+		const lastMove = `${squares[i]} placed in row ${(i-i%3)/3 + 1}, column ${i%3 + 1}`
 		this.setState({
 			history: history.concat([{
 				squares: squares,
+				lastMove: lastMove,
 			}]),
 			stepNumber: history.length,
 			xIsNext: !this.state.xIsNext,
@@ -97,6 +109,7 @@ class Game extends React.Component {
 		this.setState({
 			history: [{
 				squares: Array(9).fill(null),
+				lastMove: ''
 			}],
 			stepNumber: 0,
 			xIsNext: true,
@@ -117,13 +130,16 @@ class Game extends React.Component {
 
   	const moves = history.map((step, move) => {
   		if (move > 0) {
+  			let lastMove = step.lastMove
   			return (
 	  			<li key={move}>
 	  				<button onClick={() => this.jumpTo(move)}>
-	  					{'Return to move #' + move }
+	  					{`Return to move ${move} (${lastMove})` }
 	  				</button>
 	  			</li>
 	  		);
+  		} else {
+  			return null;
   		}
   	});
 
